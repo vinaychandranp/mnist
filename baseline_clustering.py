@@ -20,8 +20,9 @@ print('Completeness Score: '+ str(metrics.completeness_score(mnist['label'],mnis
 print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(mnist['label'],mnist_estimator.labels_)))
 print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist['label'],mnist_estimator.labels_)))
 
+mnist_estimator = cluster.KMeans(10, n_jobs=-1)
 
-mnist_estimator.fit(mnist['feats_2'])
+mnist_estimator.fit(mnist['\nfeats_2'])
 print('Clustering performance evaluation - feats_2')
 print('Homogeneity Score: '+ str(metrics.homogeneity_score(mnist['label'],mnist_estimator.labels_)))
 print('Completeness Score: '+ str(metrics.completeness_score(mnist['label'],mnist_estimator.labels_)))
