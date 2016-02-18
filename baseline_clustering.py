@@ -7,10 +7,14 @@ import numpy as np
 from sklearn import cluster
 from sklearn import metrics
 
-container = 'testing_set_01.hdf5'
-# container = str(sys.argv[1])
-mnist = h5py.File(container)
+# contaainer_train = str(sys.argv[1])
+# container_test = str(sys.argv[2])
 
+container_train = 'training_set_01.hdf5'
+container_test = 'testing_set_01.hdf5'
+
+mnist_train = h5py.File(container_train)
+mnist_test = h5py.File(container_test)
 
 def purity(truth, pred):
 	conf = metrics.confusion_matrix(truth,pred)
@@ -19,24 +23,30 @@ def purity(truth, pred):
 		t += np.amax(conf[i,:])
 	return float(t)/np.sum(conf)
 
+mnist_estimator_feats1 = cluster.KMeans(10, n_jobs=-1)
+mnist_estimator_feats2 = cluster.KMeans(10, n_jobs=-1)
+mnist_estimator_feats1.fit(mnist_train['feats_1'])
+mnist_estimator_feats2.fit(mnist_train['feats_2'])
+
+print('Clustering performance evaluation - train_feats_1')
+print('Homogeneity Score: '+ str(metrics.homogeneity_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
+print('Completeness Score: '+ str(metrics.completeness_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
+print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
+print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
+print('Purity: '+str(purity(mnist_train['label'],mnist_estimator_feats1.labels_)))
+
+print('\nClustering performance evaluation - train_feats_2')
+print('Homogeneity Score: '+ str(metrics.homogeneity_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
+print('Completeness Score: '+ str(metrics.completeness_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
+print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
+print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
+print('Purity: '+str(purity(mnist_train['label'],mnist_estimator_feats2.labels_)))
+
+heatmap = np.zeros((10,10))
+pred1 = mnist_estimator_feats1(mnist_test['feats_1'])
+pred2 = mnist_estimator_feats2(mnist_test['feats_2'])
+
+heatmap = metrics.confusion_matrix(pred1,pred2)
 
 
 
-
-mnist_estimator = cluster.KMeans(10, n_jobs=-1)
-mnist_estimator.fit(mnist['feats_1'])
-print('Clustering performance evaluation - feats_1')
-print('Homogeneity Score: '+ str(metrics.homogeneity_score(mnist['label'],mnist_estimator.labels_)))
-print('Completeness Score: '+ str(metrics.completeness_score(mnist['label'],mnist_estimator.labels_)))
-print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(mnist['label'],mnist_estimator.labels_)))
-print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist['label'],mnist_estimator.labels_)))
-print('Purity: '+str(purity(mnist['label'],mnist_estimator.labels_)))
-
-mnist_estimator = cluster.KMeans(10, n_jobs=-1)
-mnist_estimator.fit(mnist['feats_2'])
-print('\nClustering performance evaluation - feats_2')
-print('Homogeneity Score: '+ str(metrics.homogeneity_score(mnist['label'],mnist_estimator.labels_)))
-print('Completeness Score: '+ str(metrics.completeness_score(mnist['label'],mnist_estimator.labels_)))
-print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(mnist['label'],mnist_estimator.labels_)))
-print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist['label'],mnist_estimator.labels_)))
-print('Purity: '+str(purity(mnist['label'],mnist_estimator.labels_)))
