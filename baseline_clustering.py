@@ -43,8 +43,8 @@ print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist_trai
 print('Purity: '+str(purity(mnist_train['label'],mnist_estimator_feats2.labels_)))
 
 heatmap = np.zeros((10,10))
-pred1 = mnist_estimator_feats1(mnist_test['feats_1'])
-pred2 = mnist_estimator_feats2(mnist_test['feats_2'])
+pred1 = mnist_estimator_feats1.predict(mnist_test['feats_1'])
+pred2 = mnist_estimator_feats2.predict(mnist_test['feats_2'])
 
 heatmap = metrics.confusion_matrix(pred1,pred2)
 
