@@ -42,7 +42,7 @@ print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_s
 print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
 print('Purity: '+str(purity(mnist_train['label'],mnist_estimator_feats2.labels_)))
 
-heatmap = np.zeros((10,10))
+# heatmap = np.zeros((10,10))
 pred1 = mnist_estimator_feats1.predict(mnist_test['feats_1'])
 pred2 = mnist_estimator_feats2.predict(mnist_test['feats_2'])
 
