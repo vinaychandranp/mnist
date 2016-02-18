@@ -3,6 +3,7 @@
 
 import h5py
 import sys,os
+import numpy as np
 from sklearn import cluster
 from sklearn import metrics
 
