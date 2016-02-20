@@ -7,7 +7,7 @@ import numpy as np
 from sklearn import cluster
 from sklearn import metrics
 
-container_train = str(sys.argv[1
+container_train = str(sys.argv[1)
 container_test = str(sys.argv[2])
 
 # container_train = 'training_set_01.hdf5'
