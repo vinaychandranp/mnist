@@ -58,6 +58,6 @@ for i in range(0,10):
 heatmaps = np.zeros((10,10,10))
 
 for i in range(0,10):
-	pred1 = mnist_estimator_feats1.predict([x for i,x in enumerate(mnist_test['feats_1'] if i in indices[i])])
-	pred1 = mnist_estimator_feats2.predict([x for i,x in enumerate(mnist_test['feats_2'] if i in indices[i])])
+	pred1 = mnist_estimator_feats1.predict([x for i,x in enumerate(mnist_test['feats_1']) if i in indices[i]])
+	pred1 = mnist_estimator_feats2.predict([x for i,x in enumerate(mnist_test['feats_2']) if i in indices[i]])
 	heatmaps[i] = metrics.confusion_matrix(pred1,pred2)
