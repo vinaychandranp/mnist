@@ -23,30 +23,41 @@ def purity(truth, pred):
 		t += np.amax(conf[i,:])
 	return float(t)/np.sum(conf)
 
+def print_stats(truth, pred):
+	print('Homogeneity Score: '+ str(metrics.homogeneity_score(truth,pred)))
+	print('Completeness Score: '+ str(metrics.completeness_score(truth,pred)))
+	print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(truth,pred)))
+	print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(truth,pred)))
+	print('Purity: '+str(purity(truth,pred)))
+
+
 mnist_estimator_feats1 = cluster.KMeans(10, n_jobs=-1)
 mnist_estimator_feats2 = cluster.KMeans(10, n_jobs=-1)
 mnist_estimator_feats1.fit(mnist_train['feats_1'])
 mnist_estimator_feats2.fit(mnist_train['feats_2'])
 
 print('Clustering performance evaluation - train_feats_1')
-print('Homogeneity Score: '+ str(metrics.homogeneity_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
-print('Completeness Score: '+ str(metrics.completeness_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
-print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
-print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist_train['label'],mnist_estimator_feats1.labels_)))
-print('Purity: '+str(purity(mnist_train['label'],mnist_estimator_feats1.labels_)))
+print_stats(mnist_train['label'],mnist_estimator_feats1.labels_)
 
 print('\nClustering performance evaluation - train_feats_2')
-print('Homogeneity Score: '+ str(metrics.homogeneity_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
-print('Completeness Score: '+ str(metrics.completeness_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
-print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
-print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(mnist_train['label'],mnist_estimator_feats2.labels_)))
-print('Purity: '+str(purity(mnist_train['label'],mnist_estimator_feats2.labels_)))
+print_stats(mnist_train['label'],mnist_estimator_feats2.labels_)
 
-# heatmap = np.zeros((10,10))
+
 pred1 = mnist_estimator_feats1.predict(mnist_test['feats_1'])
 pred2 = mnist_estimator_feats2.predict(mnist_test['feats_2'])
 
-heatmap = metrics.confusion_matrix(pred1,pred2)
+global_heatmap = metrics.confusion_matrix(pred1,pred2)
 
+# Compute clusterwise heatmap
+label = mnist_test['label']
 
+indices = []
+for i in range(0,10):
+	indices.append([j for j,x in enumerate(label) if x == i ])
 
+heatmaps = np.zeros((10,10,10))
+
+for i in range(0,10):
+	pred1 = mnist_estimator_feats1.predict([x for i,x in enumerate(mnist_test['feats_1'] if i in indices[i])])
+	pred1 = mnist_estimator_feats2.predict([x for i,x in enumerate(mnist_test['feats_2'] if i in indices[i])])
+	heatmaps[i] = metrics.confusion_matrix(pred1,pred2)
