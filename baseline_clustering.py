@@ -10,8 +10,8 @@ from sklearn import metrics
 # contaainer_train = str(sys.argv[1])
 # container_test = str(sys.argv[2])
 
-container_train = 'training_set_01.hdf5'
-container_test = 'testing_set_01.hdf5'
+# container_train = 'training_set_01.hdf5'
+# container_test = 'testing_set_01.hdf5'
 
 mnist_train = h5py.File(container_train)
 mnist_test = h5py.File(container_test)
