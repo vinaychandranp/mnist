@@ -1,7 +1,7 @@
 # 
 # 
 
-import h5py
+import h5py, pickle
 import sys,os
 import numpy as np
 from sklearn import cluster
@@ -70,3 +70,5 @@ for i in range(0,10):
 	pred2 = mnist_estimator_feats2.predict([x for j,x in enumerate(mnist_test['feats_2']) if j in indices[i]])
 	heatmaps[i] = compute_heatmap(pred1,pred2)
 	# print(np.shape(metrics.confusion_matrix(pred1,pred2)))
+
+pickle.dump((global_heatmap,heatmaps), open('heatmaps.p','wb'))
