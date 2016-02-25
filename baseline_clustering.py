@@ -70,5 +70,6 @@ for i in range(0,10):
 	pred2 = mnist_estimator_feats2.predict([x for j,x in enumerate(mnist_test['feats_2']) if j in indices[i]])
 	heatmaps[i] = compute_heatmap(pred1,pred2)
 
-# pickle.dump((global_heatmap,heatmaps), open('heatmaps.p','wb'))
+
+pickle.dump((global_heatmap,heatmaps), open('heatmaps.p','wb'))
 
