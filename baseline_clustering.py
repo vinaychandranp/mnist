@@ -1,12 +1,34 @@
-# 
-# 
+#
+#
 
-import h5py, pickle, seaborn
-import sys,os
+import h5py
+import pickle
+import sys
 import numpy as np
+import optparse
 from sklearn import cluster
 from sklearn import metrics
 
+
+def main():
+    usage = """ Instructions placeholder """
+
+    fmt = optparse.IndentedHelpFormatter(max_help_position=50, width=100)
+    parser = optparse.OptionParser(usage=usage, formatter=fmt)
+    group = optparse.OptionGroup(parser, 'Files')
+    group.add_option('--train', default=None,
+                     help='path to HDF5 train container')
+    group.add_option('--test', default=None,
+                     help='path to HDF5 test container')
+    parser.add_option_group(group)
+    options, _ = parser.parse_args()
+
+    # Show help if no arguments supplied
+    if (len(sys.argv)) == 1:
+        parser.print_help()
+    return 1
+
+"""
 container_train = str(sys.argv[1])
 container_test = str(sys.argv[2])
 
@@ -14,29 +36,35 @@ container_test = str(sys.argv[2])
 # container_test = 'testing_set_01.hdf5'
 
 mnist_train = h5py.File(container_train, 'r')
-mnist_test = h5py.File(container_test,'r')
+mnist_test = h5py.File(container_test, 'r')
+
 
 def purity(truth, pred):
-	conf = metrics.confusion_matrix(truth,pred)
-	t = 0
-	for i in range(0,10):
-		t += np.amax(conf[i,:])
-	return float(t)/np.sum(conf)
+    conf = metrics.confusion_matrix(truth, pred)
+    t = 0
+    for i in range(0, 10):
+        t += np.amax(conf[i, :])
+    return float(t)/np.sum(conf)
+
 
 def print_stats(truth, pred):
-	print('Homogeneity Score: '+ str(metrics.homogeneity_score(truth,pred)))
-	print('Completeness Score: '+ str(metrics.completeness_score(truth,pred)))
-	print('Adjusted Mutual Information Score: '+  str(metrics.adjusted_mutual_info_score(truth,pred)))
-	print('Adjusted Rand Index Score: '+  str(metrics.adjusted_rand_score(truth,pred)))
-	print('Purity: '+str(purity(truth,pred)))
+    print('Homogeneity Score: ' + str(metrics.homogeneity_score(truth, pred)))
+    print('Completeness Score: ' +
+          str(metrics.completeness_score(truth, pred)))
+    print('Adjusted Mutual Information Score: ' +
+          str(metrics.adjusted_mutual_info_score(truth, pred)))
+    print('Adjusted Rand Index Score: ' +
+          str(metrics.adjusted_rand_score(truth, pred)))
+    print('Purity: ' +
+          str(purity(truth, pred)))
 
-def compute_heatmap(pred1,pred2):
-	size = len(pred1)
-	heatmap_ = np.zeros((10,10))
-	for i in range(0,size):
-		heatmap_[pred1[i],pred2[i]] += 1
-	return heatmap_.astype(int)
 
+def compute_heatmap(pred1, pred2):
+    size = len(pred1)
+    heatmap_ = np.zeros((10, 10))
+    for i in range(0, size):
+        heatmap_[pred1[i], pred2[i]] += 1
+    return heatmap_.astype(int)
 
 
 mnist_estimator_feats1 = cluster.KMeans(10, n_jobs=-1)
@@ -45,31 +73,34 @@ mnist_estimator_feats1.fit(mnist_train['feats_1'])
 mnist_estimator_feats2.fit(mnist_train['feats_2'])
 
 print('Clustering performance evaluation - train_feats_1')
-print_stats(mnist_train['label'],mnist_estimator_feats1.labels_)
+print_stats(mnist_train['label'], mnist_estimator_feats1.labels_)
 
 print('\nClustering performance evaluation - train_feats_2')
-print_stats(mnist_train['label'],mnist_estimator_feats2.labels_)
-
+print_stats(mnist_train['label'], mnist_estimator_feats2.labels_)
 
 pred1 = mnist_estimator_feats1.predict(mnist_test['feats_1'])
 pred2 = mnist_estimator_feats2.predict(mnist_test['feats_2'])
 
-global_heatmap = compute_heatmap(pred1,pred2)
+global_heatmap = compute_heatmap(pred1, pred2)
 
 # Compute clusterwise heatmap
 label = mnist_test['label']
 
 indices = []
-for i in range(0,10):
-	indices.append([j for j,x in enumerate(label) if x == i ])
+for i in range(0, 10):
+    indices.append([j for j, x in enumerate(label) if x == i])
 
-heatmaps = np.zeros((10,10,10))
+heatmaps = np.zeros((10, 10, 10))
 
-for i in range(0,10):
-	pred1 = mnist_estimator_feats1.predict([x for j,x in enumerate(mnist_test['feats_1']) if j in indices[i]])
-	pred2 = mnist_estimator_feats2.predict([x for j,x in enumerate(mnist_test['feats_2']) if j in indices[i]])
-	heatmaps[i] = compute_heatmap(pred1,pred2)
+for i in range(0, 10):
+    pred1 = mnist_estimator_feats1.predict([x for j, x in
+                                            enumerate(mnist_test['feats_1'])
+                                            if j in indices[i]])
+    pred2 = mnist_estimator_feats2.predict([x for j, x in
+                                            enumerate(mnist_test['feats_2'])
+                                            if j in indices[i]])
+    heatmaps[i] = compute_heatmap(pred1, pred2)
 
 
-pickle.dump((global_heatmap,heatmaps), open('heatmaps.p','wb'))
-
+pickle.dump((global_heatmap, heatmaps), open('heatmaps.p', 'wb'))
+"""
