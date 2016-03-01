@@ -5,7 +5,7 @@ import h5py
 import pickle
 import sys
 import numpy as np
-# import optparse
+import argparse
 from sklearn import cluster
 from sklearn import metrics
 
