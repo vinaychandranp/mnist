@@ -5,32 +5,23 @@ import h5py
 import pickle
 import sys
 import numpy as np
-import optparse
+# import optparse
 from sklearn import cluster
 from sklearn import metrics
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-tr', '--train', metavar='FILE', dest='trainfile',
+                    required=False, default=None,
+                    help='HDF5 container for train data')
+parser.add_argument('-te', '--test', metavar='FILE', dest='testfile',
+                    help='HDF5 container for test data')
+parser.add_argument('-nc', '--num_class', metavar='FILE', required=False,
+                    dest='nc', default=10, help='Number of classes ')
+opts = parser.parse_args(sys.argv[1:])
+container_train = opts.trainfile
+container_test = opts.testfile
+nc = opts.nc
 
-def main():
-    usage = """ Instructions placeholder """
-
-    fmt = optparse.IndentedHelpFormatter(max_help_position=50, width=100)
-    parser = optparse.OptionParser(usage=usage, formatter=fmt)
-    group = optparse.OptionGroup(parser, 'Files')
-    group.add_option('--train', default=None,
-                     help='path to HDF5 train container')
-    group.add_option('--test', default=None,
-                     help='path to HDF5 test container')
-    parser.add_option_group(group)
-    options, _ = parser.parse_args()
-
-    # Show help if no arguments supplied
-    if (len(sys.argv)) == 1:
-        parser.print_help()
-    return 1
-
-"""
-container_train = str(sys.argv[1])
-container_test = str(sys.argv[2])
 
 # container_train = 'training_set_01.hdf5'
 # container_test = 'testing_set_01.hdf5'
@@ -42,7 +33,7 @@ mnist_test = h5py.File(container_test, 'r')
 def purity(truth, pred):
     conf = metrics.confusion_matrix(truth, pred)
     t = 0
-    for i in range(0, 10):
+    for i in range(0, mnist_train):
         t += np.amax(conf[i, :])
     return float(t)/np.sum(conf)
 
@@ -61,14 +52,14 @@ def print_stats(truth, pred):
 
 def compute_heatmap(pred1, pred2):
     size = len(pred1)
-    heatmap_ = np.zeros((10, 10))
+    heatmap_ = np.zeros((nc, nc))
     for i in range(0, size):
         heatmap_[pred1[i], pred2[i]] += 1
     return heatmap_.astype(int)
 
 
-mnist_estimator_feats1 = cluster.KMeans(10, n_jobs=-1)
-mnist_estimator_feats2 = cluster.KMeans(10, n_jobs=-1)
+mnist_estimator_feats1 = cluster.KMeans(nc, n_jobs=-1)
+mnist_estimator_feats2 = cluster.KMeans(nc, n_jobs=-1)
 mnist_estimator_feats1.fit(mnist_train['feats_1'])
 mnist_estimator_feats2.fit(mnist_train['feats_2'])
 
@@ -87,12 +78,12 @@ global_heatmap = compute_heatmap(pred1, pred2)
 label = mnist_test['label']
 
 indices = []
-for i in range(0, 10):
+for i in range(0, nc):
     indices.append([j for j, x in enumerate(label) if x == i])
 
-heatmaps = np.zeros((10, 10, 10))
+heatmaps = np.zeros((nc, nc, nc))
 
-for i in range(0, 10):
+for i in range(0, nc):
     pred1 = mnist_estimator_feats1.predict([x for j, x in
                                             enumerate(mnist_test['feats_1'])
                                             if j in indices[i]])
@@ -103,4 +94,3 @@ for i in range(0, 10):
 
 
 pickle.dump((global_heatmap, heatmaps), open('heatmaps.p', 'wb'))
-"""
