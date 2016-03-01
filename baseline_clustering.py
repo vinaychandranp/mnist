@@ -15,7 +15,7 @@ parser.add_argument('-tr', '--train', metavar='FILE', dest='trainfile',
                     help='HDF5 container for train data')
 parser.add_argument('-te', '--test', metavar='FILE', dest='testfile',
                     help='HDF5 container for test data')
-parser.add_argument('-nc', '--num_class', metavar='FILE', required=False,
+parser.add_argument('-nc', '--num_class', metavar='INT', required=False,
                     dest='nc', default=10, help='Number of classes ')
 opts = parser.parse_args(sys.argv[1:])
 container_train = opts.trainfile
