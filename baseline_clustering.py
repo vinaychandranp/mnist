@@ -20,7 +20,7 @@ parser.add_argument('-nc', '--num_class', metavar='FILE', required=False,
 opts = parser.parse_args(sys.argv[1:])
 container_train = opts.trainfile
 container_test = opts.testfile
-nc = opts.nc
+nc = int(opts.nc)
 
 
 # container_train = 'training_set_01.hdf5'
