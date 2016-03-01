@@ -9,19 +9,22 @@ import argparse
 from sklearn import cluster
 from sklearn import metrics
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-tr', '--train', metavar='FILE', dest='trainfile',
-                    required=False, default=None,
-                    help='HDF5 container for train data')
-parser.add_argument('-te', '--test', metavar='FILE', dest='testfile',
-                    help='HDF5 container for test data')
-parser.add_argument('-nc', '--num_class', metavar='FILE', required=False,
-                    dest='nc', default=10, help='Number of classes ')
-opts = parser.parse_args(sys.argv[1:])
-container_train = opts.trainfile
-container_test = opts.testfile
-nc = int(opts.nc)
+# parser = argparse.ArgumentParser()
+# parser.add_argument('-tr', '--train', metavar='FILE', dest='trainfile',
+#                     required=False, default=None,
+#                     help='HDF5 container for train data')
+# parser.add_argument('-te', '--test', metavar='FILE', dest='testfile',
+#                     help='HDF5 container for test data')
+# parser.add_argument('-nc', '--num_class', metavar='FILE', required=False,
+#                     dest='nc', default=10, help='Number of classes ')
+# opts = parser.parse_args(sys.argv[1:])
+# container_train = opts.trainfile
+# container_test = opts.testfile
+# nc = int(opts.nc)
 
+container_train = sys.argv[1]
+container_test = sys.argv[2]
+nc = int(sys.argv[3])
 
 # container_train = 'training_set_01.hdf5'
 # container_test = 'testing_set_01.hdf5'
